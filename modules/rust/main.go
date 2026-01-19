@@ -83,3 +83,12 @@ func (m *Rust) CargoFmtFix() *dagger.Changeset {
 		Directory("/src")
 	return generated.Changes(m.source)
 }
+
+func (m *Rust) CargoClippy(
+	ctx context.Context,
+) (string, error) {
+	return m.Container.
+		WithExec([]string{"rustup", "component", "add", "clippy"}).
+		WithExec([]string{"cargo", "clippy", "--all", "--all-targets"}).
+		Stdout(ctx)
+}
