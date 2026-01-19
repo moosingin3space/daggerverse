@@ -12,12 +12,12 @@ type Rust struct {
 	source *dagger.Directory
 }
 
-// Creates a Rust development environment.
-func (m *Rust) New(
-	//+defaultPath="/rust-toolchain.toml"
-	toolchainFile *dagger.File,
+// Creates a Rust development environment in a container.
+func (m *Rust) DevContainer(
 	//+defaultPath="/"
 	source *dagger.Directory,
+	//+optional
+	toolchainFile *dagger.File,
 	//+optional
 	extraPackages []string,
 ) *Rust {
@@ -71,12 +71,14 @@ func (m *Rust) CargoFmtCheck(
 	ctx context.Context,
 ) (string, error) {
 	return m.Container.
+		WithExec([]string{"rustup", "component", "add", "rustfmt"}).
 		WithExec([]string{"cargo", "fmt", "--all", "--check"}).
 		Stdout(ctx)
 }
 
 func (m *Rust) CargoFmtFix() *dagger.Changeset {
 	generated := m.Container.
+		WithExec([]string{"rustup", "component", "add", "rustfmt"}).
 		WithExec([]string{"cargo", "fmt", "--all"}).
 		Directory("/src")
 	return generated.Changes(m.source)
