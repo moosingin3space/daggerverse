@@ -7,8 +7,8 @@
   "dependencies": [
     {
       "name": "wolfi",
-      "source": "github.com/dagger/dagger/modules/wolfi@main",
-      "pin": "f70c04afc27a1b09d238aa676793a9c7999cc063"
+      "source": "github.com/dagger/dagger/modules/wolfi@v0.19.10",
+      "pin": "b1dbdabe70d9907b51c1bce48726aea36783ffbb"
     }
   ]
 }
