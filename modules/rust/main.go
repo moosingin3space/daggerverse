@@ -20,6 +20,12 @@ func (m *Rust) DevContainer(
 	toolchainFile *dagger.File,
 	//+optional
 	extraPackages []string,
+	// Extra repositories to add to the package resolver
+	//+optional
+	extraRepositories []string,
+	// Extra keys needed to authenticate the extra repositories
+	//+optional
+	extraKeyURLs []string,
 ) *Rust {
 	packages := []string{
 		"rustup",
@@ -35,7 +41,9 @@ func (m *Rust) DevContainer(
 	// TODO key these caches appropriately
 	ctr := dag.Wolfi().
 		Container(dagger.WolfiContainerOpts{
-			Packages: packages,
+			Packages:          packages,
+			ExtraRepositories: extraRepositories,
+			ExtraKeyUrls:      extraKeyURLs,
 		}).
 		WithEnvVariable("CARGO_HOME", "/usr/local/cargo").
 		WithEnvVariable("RUSTUP_HOME", "/usr/local/rustup").
