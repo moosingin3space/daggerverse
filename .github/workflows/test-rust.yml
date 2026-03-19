@@ -21,7 +21,7 @@ jobs:
           verb: call
           module: ./ci
           args: test-standalone
-          version: "0.19.10"
+          version: "0.20.1"
           cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
 
       - name: Run extra-packages test
@@ -30,7 +30,7 @@ jobs:
           verb: call
           module: ./ci
           args: test-with-extra-packages
-          version: "0.19.10"
+          version: "0.20.1"
           cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
 
       - name: Run extra-repositories test
@@ -39,5 +39,5 @@ jobs:
           verb: call
           module: ./ci
           args: test-with-extra-repositories
-          version: "0.19.10"
+          version: "0.20.1"
           cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
