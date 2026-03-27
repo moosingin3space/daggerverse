@@ -75,6 +75,18 @@ func (m *Rust) CargoCheck(
 		Stdout(ctx)
 }
 
+func (m *Rust) CargoTest(
+	ctx context.Context,
+	//+optional
+	extraArgs []string,
+) (string, error) {
+	args := []string{"cargo", "test"}
+	args = append(args, extraArgs...)
+	return m.Container.
+		WithExec(args).
+		Stdout(ctx)
+}
+
 func (m *Rust) CargoFmtCheck(
 	ctx context.Context,
 ) (string, error) {
