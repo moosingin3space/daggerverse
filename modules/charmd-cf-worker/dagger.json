@@ -1,0 +1,13 @@
+{
+  "name": "charmd-cf-worker",
+  "engineVersion": "v0.20.3",
+  "sdk": {
+    "source": "go"
+  },
+  "dependencies": [
+    {
+      "name": "rust",
+      "source": "../rust"
+    }
+  ]
+}
