@@ -84,10 +84,40 @@ func (m *CharmdCfWorker) Deploy(
 	cloudflareApiToken *dagger.Secret,
 	// Cloudflare account ID
 	cloudflareAccountId *dagger.Secret,
+	// Wrangler environment to deploy to (e.g. "preview"). Leave empty for default.
+	//+optional
+	env string,
+	// Override the worker name (e.g. "hubdash-pr-42"). Leave empty to use wrangler.jsonc name.
+	//+optional
+	workerName string,
+) (string, error) {
+	cmd := []string{"pnpm", "wrangler", "deploy"}
+	if env != "" {
+		cmd = append(cmd, "--env", env)
+	}
+	if workerName != "" {
+		cmd = append(cmd, "--name", workerName)
+	}
+	return m.Container.
+		WithSecretVariable("CLOUDFLARE_API_TOKEN", cloudflareApiToken).
+		WithSecretVariable("CLOUDFLARE_ACCOUNT_ID", cloudflareAccountId).
+		WithExec(cmd).
+		Stdout(ctx)
+}
+
+// Delete deletes a deployed Cloudflare Worker by name using Wrangler.
+func (m *CharmdCfWorker) Delete(
+	ctx context.Context,
+	// Cloudflare API token for authentication
+	cloudflareApiToken *dagger.Secret,
+	// Cloudflare account ID
+	cloudflareAccountId *dagger.Secret,
+	// Name of the worker to delete
+	workerName string,
 ) (string, error) {
 	return m.Container.
 		WithSecretVariable("CLOUDFLARE_API_TOKEN", cloudflareApiToken).
 		WithSecretVariable("CLOUDFLARE_ACCOUNT_ID", cloudflareAccountId).
-		WithExec([]string{"pnpm", "run", "deploy"}).
+		WithExec([]string{"pnpm", "wrangler", "delete", "--name", workerName}).
 		Stdout(ctx)
 }
