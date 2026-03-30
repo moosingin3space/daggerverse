@@ -84,40 +84,34 @@ func (m *CharmdCfWorker) Deploy(
 	cloudflareApiToken *dagger.Secret,
 	// Cloudflare account ID
 	cloudflareAccountId *dagger.Secret,
-	// Wrangler environment to deploy to (e.g. "preview"). Leave empty for default.
-	//+optional
-	env string,
-	// Override the worker name (e.g. "hubdash-pr-42"). Leave empty to use wrangler.jsonc name.
-	//+optional
-	workerName string,
 ) (string, error) {
-	cmd := []string{"pnpm", "wrangler", "deploy"}
-	if env != "" {
-		cmd = append(cmd, "--env", env)
-	}
-	if workerName != "" {
-		cmd = append(cmd, "--name", workerName)
-	}
 	return m.Container.
 		WithSecretVariable("CLOUDFLARE_API_TOKEN", cloudflareApiToken).
 		WithSecretVariable("CLOUDFLARE_ACCOUNT_ID", cloudflareAccountId).
-		WithExec(cmd).
+		WithExec([]string{"pnpm", "wrangler", "deploy"}).
 		Stdout(ctx)
 }
 
-// Delete deletes a deployed Cloudflare Worker by name using Wrangler.
-func (m *CharmdCfWorker) Delete(
+// UploadVersion uploads a new Worker version without deploying it to production.
+// Pass previewAlias (e.g. "pr-42") to assign a named preview URL of the form
+// <alias>-<worker-name>.<subdomain>.workers.dev.
+func (m *CharmdCfWorker) UploadVersion(
 	ctx context.Context,
 	// Cloudflare API token for authentication
 	cloudflareApiToken *dagger.Secret,
 	// Cloudflare account ID
 	cloudflareAccountId *dagger.Secret,
-	// Name of the worker to delete
-	workerName string,
+	// Alias to assign to this version (e.g. "pr-42"). Leave empty for no alias.
+	//+optional
+	previewAlias string,
 ) (string, error) {
+	cmd := []string{"pnpm", "wrangler", "versions", "upload"}
+	if previewAlias != "" {
+		cmd = append(cmd, "--preview-alias", previewAlias)
+	}
 	return m.Container.
 		WithSecretVariable("CLOUDFLARE_API_TOKEN", cloudflareApiToken).
 		WithSecretVariable("CLOUDFLARE_ACCOUNT_ID", cloudflareAccountId).
-		WithExec([]string{"pnpm", "wrangler", "delete", "--name", workerName}).
+		WithExec(cmd).
 		Stdout(ctx)
 }
