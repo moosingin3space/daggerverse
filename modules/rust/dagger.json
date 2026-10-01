@@ -1,14 +1,14 @@
 {
   "name": "rust",
-  "engineVersion": "v0.20.6",
+  "engineVersion": "v0.21.10",
   "sdk": {
     "source": "go"
   },
   "dependencies": [
     {
       "name": "wolfi",
-      "source": "github.com/dagger/dagger/modules/wolfi@v0.20.6",
-      "pin": "220be71b0cc1c09f4d70a37df1615800187c9fad"
+      "source": "github.com/dagger/dagger/modules/wolfi@v0.21.10",
+      "pin": "02b2558d9997a77bf5d357032c45cdf5bf7d5ce1"
     }
   ]
 }
